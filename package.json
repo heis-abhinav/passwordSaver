@@ -2,8 +2,9 @@
   "name": "passwordsaver",
   "version": "1.0.0",
   "description": "A password storage desktop app to store passwords which resides in tray",
-  "main": "main.js",
+  "main": "./app/main.js",
   "scripts": {
+    "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,6 +18,10 @@
   },
   "homepage": "https://github.com/heis-abhinav/passwordSaver#readme",
   "dependencies": {
+    "@electron/remote": "^2.0.8",
     "electron": "^18.2.3"
+  },
+  "devDependencies": {
+    "menubar": "^9.2.0"
   }
 }
