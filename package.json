@@ -1,0 +1,22 @@
+{
+  "name": "passwordsaver",
+  "version": "1.0.0",
+  "description": "A password storage desktop app to store passwords which resides in tray",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/heis-abhinav/passwordSaver.git"
+  },
+  "author": "Abhinav Sharma",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/heis-abhinav/passwordSaver/issues"
+  },
+  "homepage": "https://github.com/heis-abhinav/passwordSaver#readme",
+  "dependencies": {
+    "electron": "^18.2.3"
+  }
+}
