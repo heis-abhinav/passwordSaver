@@ -1,5 +1,5 @@
-button {
- width: 100px;
+.close-btn {
+ width: 75px;
  height: 25px;
  cursor: pointer;
  display: flex;
@@ -9,22 +9,23 @@ button {
  border-radius: 5px;
  box-shadow: 1px 1px 3px rgba(0,0,0,0.15);
  background: #e62222;
+ margin-left: auto;
 }
 
-button, button span {
+.close-btn, .close-btn span {
  transition: 200ms;
 }
 
-button .text {
- transform: translateX(17px);
+.close-btn .text {
+ transform: translateX(5px);
  color: white;
  font-weight: bold;
 }
 
-button .icon {
+.close-btn .icon {
  position: absolute;
  border-left: 1px solid #c41b1b;
- transform: translateX(55px);
+ transform: translateX(45px);
  height: 20px;
  width: 20px;
  display: flex;
@@ -32,29 +33,29 @@ button .icon {
  justify-content: center;
 }
 
-button svg {
+.close-btn svg {
  width: 7px;
  fill: #eee;
 }
 
-button:hover {
+.close-btn:hover {
  background: #ff3636;
 }
 
-button:hover .text {
+.close-btn:hover .text {
  color: transparent;
 }
 
-button:hover .icon {
- width: 100px;
+.close-btn:hover .icon {
+ width: 60px;
  border-left: none;
  transform: translateX(0);
 }
 
-button:focus {
+.close-btn:focus {
  outline: none;
 }
 
-button:active .icon svg {
+.close-btn:active .icon svg {
  transform: scale(0.8);
 }
