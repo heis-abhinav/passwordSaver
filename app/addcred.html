@@ -1,0 +1,23 @@
+<!<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Add New Credentials</title>
+</head>
+<body>
+	<div>
+		<label>Name</label>
+		<input type="text" id="name" name="name" value=""/>
+		<label>Username/Email</label>
+		<input type="text" id="username" name="username" value="" />
+		<label>Password</label>
+		<input type="text" id="password" name="password" value=""/>
+	</div>
+	<button class="insert" id="add-to-vault">Add to Vault</button>
+	<button id="close-btn">close</button>
+	<script type="text/javascript">
+		require('./credential')
+	</script>
+</body>
+</html>
