@@ -29,6 +29,8 @@ addButton.addEventListener('click', ()=> {
 	mainProcess.addCredentialsBox(currentWindow);
 });
 
-ipcRenderer.on('message', (event, message) => {
-	console.log(message);
+ipcRenderer.on('this-message', (event, message) => {
+	console.log(typeof(message))
+	const passwordElement = createPasswordElement(...Object.values(message));
+	PasswordList.prepend(passwordElement);
 })
