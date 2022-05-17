@@ -1,8 +1,27 @@
 const {app, BrowserWindow, Menu, Tray} =require('electron');
 const {menubar} = require('menubar');
 const path = require('path');
-let newWindow = null;
 require('@electron/remote/main').initialize();
+const vault = require('./vault');
+const sqlite3 = require('sqlite3').verbose();
+const db = new sqlite3.Database('./vault.sqlite3', (err) => {
+      if (err) {
+        console.log('Could not connect to database', err)
+      } else {
+        console.log('Connected to database')
+      }});
+
+db.run(`CREATE TABLE IF NOT EXISTS passwordvault (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		name VARCHAR,
+		username VARCHAR,
+		password VARCHAR
+	)`, async () => {
+			const vaultDB = await new vault(db);
+		}
+	);
+
+
 const option = {
 				webPreferences:{
 					nodeIntegration : true,
@@ -29,6 +48,7 @@ const updateMenu = () => {
 }
 
 app.on('ready', () => {
+	vaultDB.createTable();
 	tray = new Tray(path.join('img/locker.png'));
 	updateMenu();
 	tray.setToolTip('Password Vault');
@@ -37,7 +57,7 @@ app.on('ready', () => {
 
 const windoww = () => {
 	//if(newWindow != null){
-		let newWindow = new BrowserWindow({
+		const newWindow = new BrowserWindow({
 			webPreferences : {
 				nodeIntegration : true,
 				contextIsolation : false,
@@ -59,6 +79,7 @@ const windoww = () => {
 		require("@electron/remote/main").enable(newWindow.webContents);
 		newWindow.openDevTools();
 	//}
+	return newWindow;
 }
 
 const closeWindow =  exports.closeWindow  = async (targetWindow) => {
@@ -93,5 +114,6 @@ const addCredentialsBox = exports.addCredentialsBox = (targetWindow) => {
 
 const addCredentials = exports.addCredentials = (namee, username, password, targetWindow) => {
 	console.log(namee, username, password);
+	console.log(targetWindow);
 	//newWindow.webContents.send('message', {namee, username, password})
 }
