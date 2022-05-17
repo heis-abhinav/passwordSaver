@@ -15,12 +15,39 @@ body{
 	padding: 0;
 	position: absolute;
 }
-.close_btn{
-	height: 30px;
-  	width: 30px;*/
-	float: right;
-	border: 1px;
-	background-color: #bae8e8;
-	margin: 10px;
-	border-color: black;
+
+.container {
+  position: absolute;
+  width: 100%;
+  overflow: auto;
+}
+
+.content {
+  height: 100%;
+  margin-top: 65px;
+}
+
+.password-list {
+  margin-top: 5px;
+  padding: 0 10px;
+  padding-bottom: 10px;
+}
+
+.password-list {
+  border: 1px solid rgb(178, 193, 191);
+  box-shadow: 1px 1px 1px 1px rgba(205, 228, 224, 0.78);
+  padding: 0.5em;
+  padding-bottom: 10px;
+}
+
+.password-text {
+  background-color: rgb(228, 248, 245);
+  padding: 0.5em;
+  min-width: 100%;
+  max-height: 10em;
+  overflow: scroll;
+}
+
+.password-text::-webkit-scrollbar {
+  display: none;
 }
