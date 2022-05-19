@@ -6,11 +6,11 @@ const namee = document.querySelector('#name');
 const username = document.querySelector('#username'); 
 const password = document.querySelector('#password'); 
 const closeNow = document.querySelector('#close-btn');
-
+ 
 addToVault.addEventListener('click', (event) => {
 	let Data = {
-                    name: namee.value,
-                    username: username.value,
+                    name: mainProcess.sanitizeString(namee.value),
+                    username: mainProcess.sanitizeString(username.value),
                     password: password.value
                 };
 	mainProcess.addCredentials(namee.value,username.value,password.value, currentWindow);
@@ -27,3 +27,4 @@ closeNow.addEventListener('click', (event) => {
 	mainProcess.closeWindow(currentWindow);
 
 })
+
