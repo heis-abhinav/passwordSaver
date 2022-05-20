@@ -1,0 +1,6 @@
+/* From uiverse.io by @barisdogansutcu */
+.add-btn {
+ display: flex;
+ cursor: pointer;
+ align-items: center;
+}
