@@ -42,11 +42,7 @@ ipcRenderer.on('this-message', (event, message) => {
 
 const updateRenderer = (vault) => {
 	vault.forEach(val => {
-		var name = val.name;
-		var username = val.username;
-		var password = val.password;
-		
-		const passwordElement = createPasswordElement(name, username, password);
+		const passwordElement = createPasswordElement(val.name, val.username, val.password);
 		PasswordList.prepend(passwordElement);
 		console.log(name)
 	})

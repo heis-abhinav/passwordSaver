@@ -7,6 +7,7 @@ const AppDAO = require('./dao');
 const vault = require('./vault');
 let vaultDB;
 let db = null;
+let newWindow;
 //const sqlite3 = require('sqlite3').verbose();
 
 /*const db = new sqlite3.Database('./vault2.sqlite3', (err) => {
@@ -93,7 +94,7 @@ app.on('ready', () => {
 
 const windoww = () => {
 	//if(newWindow != null){
-		const newWindow = new BrowserWindow({
+		newWindow = new BrowserWindow({
 			webPreferences : {
 				nodeIntegration : true,
 				contextIsolation : false,

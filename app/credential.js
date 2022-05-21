@@ -9,8 +9,8 @@ const closeNow = document.querySelector('#close-btn');
  
 addToVault.addEventListener('click', (event) => {
 	let Data = {
-                    name: mainProcess.sanitizeString(namee.value),
-                    username: mainProcess.sanitizeString(username.value),
+                    name: namee.value,
+                    username: username.value,
                     password: password.value
                 };
 	mainProcess.addCredentials(namee.value,username.value,password.value, currentWindow);
