@@ -8,19 +8,11 @@ const password = document.querySelector('#password');
 const closeNow = document.querySelector('#close-btn');
  
 addToVault.addEventListener('click', (event) => {
-	let Data = {
-                    name: namee.value,
-                    username: username.value,
-                    password: password.value
-                };
 	mainProcess.addCredentials(namee.value,username.value,password.value, currentWindow);
-	currentWindow.getParentWindow().webContents.send('this-message', Data)
+	mainProcess.getAllData();
 	namee.value = '';
 	username.value = '';
 	password.value = '';
-	
-	//console.log(namee.value)
-	//mainProcess.closeWindow(currentWindow);
 });
 
 closeNow.addEventListener('click', (event) => {
