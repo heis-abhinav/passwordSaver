@@ -1,30 +1,24 @@
-const closeBtn = document.querySelector('#close-btn');
+//const closeBtn = document.querySelector('#close-btn');
 const {ipcRenderer, clipboard} = require('electron');
 const mainProcess = require('@electron/remote').require('./main.js');
 const currentWindow = require('@electron/remote').getCurrentWindow();
 const addButton = document.querySelector('.add-btn');
 const vault = new Set();
 
-closeBtn.addEventListener('click', () =>{
-	mainProcess.closeWindow(currentWindow);
-});
-
-const passwordList = document.getElementById('password-list');
+const passwordList = document.getElementById('passwords');
 
 const createPasswordElement = (id,name, username, password) => {
-	const passwordElement = document.createElement('article');
+	const passwordElement = document.createElement('tr');
 	passwordElement.classList.add('password-list');
 	passwordElement.innerHTML = `
-		<div class="password-text">
-			<div class="password-id" hidden>${id}</div>
-			<div class="password-name">${name}</div>
-			<div class="password-username">${username}</div>
-			<div class="password-password">${password}</div>
-		</div>
-		<div class="password-control">
-			<button class="edit-password">Edit</button>
-			<button class="remove-password">Remove</button>
-		</div>
+			<td class="password-id" hidden>${+id}</td>
+			<td class="password-name">${name}</td>
+			<td class="password-username" title= "Click to copy" >${username}</td>
+			<td class="password-password" title= "Click to copy">${password}</td>
+			<div class="password-control">
+				<button class="edit-password" id = "${+id}">Edit</button>
+				<button class="remove-password">Remove</button>
+			</div>
 	`;
 	return passwordElement;
 };
@@ -33,21 +27,15 @@ addButton.addEventListener('click', () => {
 	mainProcess.addCredentialsBox(currentWindow);
 });
 
-ipcRenderer.on('this-message', (event, message) => {
-	vault.add(message)
-	passwordList.innerHTML = '';
-	updateRenderer(vault);
-});
-
 const updateRenderer = (vault) => {
+	passwordList.innerHTML = '';
 	vault.forEach(val => {
 		const passwordElement = createPasswordElement(val.id, val.name, val.username, val.password);
-		passwordList.prepend(passwordElement);
+		passwordList.append(passwordElement);
 	});
 };
 
 ipcRenderer.on('password-list', (event, list) => {
-	console.log(list);
 	updateRenderer(list);
 });
 
@@ -57,9 +45,11 @@ passwordList.addEventListener('click', (event) => {
 	};
 
 	const listItem = getParent(event);
-	if(hasClass('password-name') || hasClass('password-username') || hasClass('password-password') ) {
+	if( hasClass('password-username') || hasClass('password-password') ) {
 		copyToClipboard(getPasswordText(listItem))
 	}
+	if(hasClass('edit-password')){mainProcess.addCredentialsBox(currentWindow, listItem.id);}
+	console.log(listItem.id);
 });
 
 const copyToClipboard = (text) => {
