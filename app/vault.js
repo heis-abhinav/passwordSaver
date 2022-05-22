@@ -27,12 +27,11 @@ class Vault{
       [name, username, password]);
  	}
 
- 	update(project) {
-    const { id, name, username, password } = project
+ 	update(id, name, username, password) {
     return this.dao.run(
       `UPDATE passwordvault SET name = ? , username = ? , password = ?  WHERE id = ?`,
       [name, username, password , id]
-    )
+    );
   }
 
   delete(id) {
