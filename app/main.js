@@ -7,9 +7,8 @@ const AppDAO = require('./dao');
 const vault = require('./vault');
 let vaultDB;
 let db = null;
-let newWindow;
+let newWindow = null;
 db = new AppDAO('./vault.sqlite3');
-
 vaultDB = new vault(db)
 vaultDB.createTables();
 
@@ -41,7 +40,7 @@ const updateMenu = () => {
 
 app.on('ready', () => {
 	
-	
+	Menu.setApplicationMenu(null);
 	tray = new Tray(path.join('img/locker.png'));
 	updateMenu();
 	tray.setToolTip('Password Vault');
@@ -49,15 +48,15 @@ app.on('ready', () => {
 })
 
 const windoww = () => {
+	if(!newWindow){
 		newWindow = new BrowserWindow({
 			webPreferences : {
 				nodeIntegration : true,
 				contextIsolation : false,
 				enableRemoteModule :true,
+				devTools: false
 			},
-			
 			resizable:false,
-			frame:false,
 			titleBarStyle: 'hidden',
 	  		titleBarOverlay: true,
 		});
@@ -69,11 +68,11 @@ const windoww = () => {
 		});
 
 		require("@electron/remote/main").enable(newWindow.webContents);
-		newWindow.openDevTools();
 	
 		newWindow.once('ready-to-show', () => {
 			getAllData();			
 		});
+	}
 	return newWindow;
 }
 
@@ -82,17 +81,17 @@ const closeWindow =  exports.closeWindow  = async (targetWindow) => {
 }
 
 
-
 /*Prevent app to shutdown on closing all windows*/
-app.on('window-all-closed', e => e.preventDefault() )
+app.on('window-all-closed', () => { e => e.preventDefault(); newWindow = null; });
 
 
-const addCredentialsBox = exports.addCredentialsBox = (targetWindow) => {
+const addCredentialsBox = exports.addCredentialsBox = (targetWindow, values = null) => {
 	let child = new BrowserWindow({
 			webPreferences : {
 				nodeIntegration : true,
 				contextIsolation : false,
 				enableRemoteModule :true,
+				devTools: false
 			},
 			resizable:true,
 			parent:targetWindow,
@@ -104,23 +103,35 @@ const addCredentialsBox = exports.addCredentialsBox = (targetWindow) => {
 	});
 	child.loadFile('./app/addcred.html');
 	child.once('ready-to-show', () => {
-		 	child.show();
+		if(values != null){
+			vaultDB.getById(values).then((row) => {
+				child.webContents.send('update-method', row);
+			});
+		}
+							
+		child.show();
 	});
 	require("@electron/remote/main").enable(child.webContents);
-}
+};
 
-const addCredentials = exports.addCredentials = (namee, username, password, targetWindow) => {
-	console.log(namee, username, password);
-	console.log(targetWindow);
-	vaultDB.create(namee, username, password);
-}
+const addCredentials = exports.addCredentials = (id = 0,namee, username, password, targetWindow) => {
+	if(id != 0){
+		vaultDB.update(id, namee, username, password).then((res) => {
+			closeWindow(targetWindow);
+		})
+		
+	}else{
+		vaultDB.create(namee, username, password);
+	}
+	
+};
 
 const sanitizeString = exports.sanitizeString = (input) => {
 	return sanitizer.value(input, 'String');
-}
+};
 
 const getAllData = exports.getAllData = () => {
 	vaultDB.getAll().then((rows) => {
 		newWindow.webContents.send('password-list', rows);	
 	});
-}
+};
