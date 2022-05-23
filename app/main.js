@@ -70,7 +70,7 @@ const windoww = () => {
 		require("@electron/remote/main").enable(newWindow.webContents);
 	
 		newWindow.once('ready-to-show', () => {
-			getAllData();			
+			getAllData();
 		});
 	}
 	return newWindow;
@@ -104,11 +104,10 @@ const addCredentialsBox = exports.addCredentialsBox = (targetWindow, values = nu
 	child.loadFile('./app/addcred.html');
 	child.once('ready-to-show', () => {
 		if(values != null){
-			vaultDB.getById(values).then((row) => {
+			vaultDB.getById(convertOctToDec(values)).then((row) => {
 				child.webContents.send('update-method', row);
 			});
 		}
-							
 		child.show();
 	});
 	require("@electron/remote/main").enable(child.webContents);
@@ -135,3 +134,10 @@ const getAllData = exports.getAllData = () => {
 		newWindow.webContents.send('password-list', rows);	
 	});
 };
+
+const convertDecToOct = exports.convertDecToOct = (num) => num.toString(16);
+const convertOctToDec = exports.convertOctToDec = (num) => parseInt(num, 16);
+
+const removeCredential = exports.removeCredential = (targetWindow, id) => {
+	vaultDB.delete(convertOctToDec(id)).then(getAllData());
+}
