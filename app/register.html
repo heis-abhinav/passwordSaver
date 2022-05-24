@@ -3,17 +3,16 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="style.css">
 	<title>Register Master Password</title>
 </head>
 <body>
 	<form id="form">
 		<div>
-			<label>Set Password</label>
-			<input type="password" id = "password" minlength="5" pattern="[0-9]*" maxlength="5" name="password" inputmode="numeric" required />
-			<label>Re-enter Password</label>
-			<input type="password" id="password-verify" minlength="5" pattern="[0-9]*" maxlength="5" name="password-verify" inputmode="numeric" required />
+			<input type="password" id = "password" placeholder="Set 5 digit Password" minlength="5" pattern="[0-9]*" maxlength="5" name="password" inputmode="numeric" required />
+			<input type="password" id="password-verify" placeholder="Re-enter Password" minlength="5" pattern="[0-9]*" maxlength="5" name="password-verify" inputmode="numeric" required />
 		</div>
-		<button class="insert" id="register-password">Save</button>
+		<button type="input" class="insert" id="register-password">Save</button>
 		<button id="close-btn">close</button>
 	</form>
 	<script type="text/javascript">
