@@ -1,4 +1,3 @@
-//const closeBtn = document.querySelector('#close-btn');
 const {ipcRenderer, clipboard} = require('electron');
 const mainProcess = require('@electron/remote').require('./main.js');
 const currentWindow = require('@electron/remote').getCurrentWindow();
@@ -6,22 +5,6 @@ const addButton = document.querySelector('.add-btn');
 const vault = new Set();
 
 const passwordList = document.getElementById('passwords');
-
-/*const createPasswordElement = (id,name, username, password) => {
-	const passwordElement = document.createElement('tr');
-	passwordElement.classList.add('password-list');
-	passwordElement.innerHTML = `
-			<td class="password-id" hidden>${+id}</td>
-			<td class="password-name">${name}</td>
-			<td class="password-username" title= "Click to copy" >${username}</td>
-			<td class="password-password" title= "Click to copy">${password}</td>
-			<div class="password-control">
-				<button class="edit-password" id = "${+id}">Edit</button>
-				<button class="remove-password">Remove</button>
-			</div>
-	`;
-	return passwordElement;
-};*/
 
 const createPasswordRow = (id, name, username, password) => {
 	const passwordElement = passwordList.insertRow(-1);
@@ -45,7 +28,6 @@ const updateRenderer = (vault) => {
 	passwordList.innerHTML = '';
 	vault.forEach(val => {
 		const passwordElement = createPasswordRow(val.id, val.name, val.username, val.password);
-		//passwordList.prepend(passwordElement);
 	});
 };
 
