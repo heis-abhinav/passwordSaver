@@ -7,7 +7,7 @@ const username = document.querySelector('#username');
 const password = document.querySelector('#password'); 
 const closeNow = document.querySelector('#close-btn');
 const id = document.getElementById('id');
-
+name.focus();
 addToVault.addEventListener('click', (event) => {
 	namee = name.value.trim();
 	usernamee = username.value.trim();
