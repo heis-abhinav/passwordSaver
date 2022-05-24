@@ -2,7 +2,6 @@ class Vault{
 
 	constructor(dao){
 		this.dao = dao;
-		console.log('2. vault')
 	}
 
 	createTables ()  {
@@ -16,7 +15,6 @@ class Vault{
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       password VARCHAR
       );`;
-		console.log('3. create')
      this.dao.run(table1);
 		 this.dao.run(table2);
 	}
@@ -49,6 +47,19 @@ class Vault{
 
   getAll() {
     return this.dao.all(`SELECT * FROM passwordvault`)
+  }
+
+  checkRegistered() {
+    return this.dao.all(`SELECT * FROM userpassword`);
+  }
+
+  registerMaster(hash) {
+    this.dao.all(`DELETE FROM userpassword`);
+    return this.dao.run(`INSERT INTO userpassword (password) VALUES (?)`, [hash]);
+  }
+
+  getMaster(){
+    return this.dao.all(`SELECT password FROM userpassword`);
   }
 }
 
