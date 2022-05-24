@@ -12,7 +12,7 @@ class Verfiy {
 		});
 	}
 
-	verifyLogin(password, inputPassword) {
+	verifylogin(password, inputPassword) {
 		return new Promise((resolve,reject) => {
 			bcrypt.compare(inputPassword, password).then((result) => {
 				resolve(result);
