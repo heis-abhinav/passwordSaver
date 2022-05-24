@@ -5,9 +5,8 @@ const registerButton = document.querySelector('#register-password');
 const password = document.querySelector('#password');
 const form = document.querySelector('#form');
 const verifyPassword = document.querySelector('#password-verify');
-
 const closeNow = document.querySelector('#close-btn');
-
+password.focus();
 form.addEventListener('submit', (e) => e.preventDefault());
 registerButton.addEventListener('click', (event) => {
 	if(validatePasswords()){
