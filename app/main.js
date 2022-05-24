@@ -1,5 +1,6 @@
 const {app, BrowserWindow, Menu, Tray} =require('electron');
 const {menubar} = require('menubar');
+const applicationMenu = require('./application-menu');
 const path = require('path');
 require('@electron/remote/main').initialize();
 var sanitizer = require('sanitize')();
@@ -40,6 +41,9 @@ const updateMenu = () => {
 	]);
 	tray.setContextMenu(menuOptions);
 }
+const gotTheLock = app.requestSingleInstanceLock();
+
+if(!gotTheLock) app.quit();
 
 app.on('ready', () => {
 	tray = new Tray(path.join('img/locker.png'));
@@ -48,9 +52,7 @@ app.on('ready', () => {
 })
 
 const openUp = () => {
-	console.log('open')
 	vaultDB.checkRegistered().then((row) => {
-		console.log('dbcheck')
 		if (row.length <= 0 ){
 			registerWindow();
 		}else{
@@ -66,19 +68,20 @@ const loginWindow = () => {
 				nodeIntegration:true,
 				contextIsolation: false,
 				enableRemoteModule: true,
+				devTools:false,
 			},
-			//resizable: false,
+			resizable: false,
 			modal: true,
 			show: false,
 			alwaysOnTop:true,
 			width: 300,
 			height: 200,
+			icon:'img/locker.png',
 		});
 		logWin.loadFile('app/login.html');
 		logWin.setMenu(null);
 		logWin.once('ready-to-show', () => {
 			logWin.show();
-			logWin.webContents.openDevTools();
 		});
 		require("@electron/remote/main").enable(logWin.webContents);
 	}
@@ -86,7 +89,7 @@ const loginWindow = () => {
 	return logWin;
 }
 
-const registerWindow = () => {
+const registerWindow = exports.registerWindow = () => {
 	if(!regWin) {
 		regWin = new BrowserWindow({
 			webPreferences: {
@@ -95,17 +98,18 @@ const registerWindow = () => {
 				enableRemoteModule: true,
 			},
 			resizable:true,
+			devTools:false,
 			modal: true,
 			show: false,
 			alwaysOnTop:true,
 			width: 300,
 			height: 200,
+			icon:'img/locker.png',
 		});
 		regWin.loadFile('app/register.html');
-		registerWindow.setMenu(null);
+		regWin.setMenu(null);
 		regWin.once('ready-to-show', () => {
 			regWin.show();
-			regWin.webContents.openDevTools();
 		});
 		require("@electron/remote/main").enable(regWin.webContents);
 	}
@@ -120,16 +124,17 @@ const mainWindow = () => {
 				nodeIntegration : true,
 				contextIsolation : false,
 				enableRemoteModule :true,
-				devTools: false
+				devTools: false,
 			},
 			resizable:false,
 			titleBarStyle: 'hidden',
 	  		titleBarOverlay: true,
+	  		icon:'img/locker.png',
 		});
 
 		newWindow.setBackgroundColor('#212121')
 		newWindow.loadFile('app/index.html');
-		//newWindow.setMenu(null);
+		newWindow.setMenu(applicationMenu);
 		newWindow.once('ready-to-show', () => {
 		 	newWindow.show();
 		 	getAllData();
@@ -155,7 +160,7 @@ const addCredentialsBox = exports.addCredentialsBox = (targetWindow, values = nu
 				nodeIntegration : true,
 				contextIsolation : false,
 				enableRemoteModule :true,
-				//devTools: false
+				devTools: false
 			},
 			resizable:true,
 			parent:targetWindow,
@@ -164,6 +169,7 @@ const addCredentialsBox = exports.addCredentialsBox = (targetWindow, values = nu
 			modal: true,
 			show: false,
 			alwaysOnTop:true, 
+			icon:'img/locker.png',
 	});
 	child.loadFile('./app/addcred.html');
 	child.setMenu(null);
@@ -174,7 +180,6 @@ const addCredentialsBox = exports.addCredentialsBox = (targetWindow, values = nu
 			});
 		}
 		child.show();
-		child.webContents.openDevTools();
 	});
 	require("@electron/remote/main").enable(child.webContents);
 };
@@ -219,14 +224,56 @@ const registerMaster = exports.registerMaster = (password,targetWindow) => {
 }
 
 const verifyLogin = exports.verifyLogin = (inputPassword, targetWindow) => {
-	vaultDB.getMaster().then((row)=> {
-		let password = row[0]['password'];
-		verification.verifyLogin(password, inputPassword).then((res) => {
-			if(res){
-				closeWindow(targetWindow);
-				mainWindow();
-			}
-		})
-	})
-	//verification.verifyLogin(password).then
+	verPassword(inputPassword).then((res) => {
+		if(res){
+			closeWindow(targetWindow);
+			mainWindow();
+		}else{
+			targetWindow.webContents.send('wrong-password');
+		}
+	});
+}
+
+const verPassword = exports.verPassword = (inputPassword)  => {
+	return new Promise((resolve,reject) => {
+		vaultDB.getMaster().then((row)=> {
+			let password = row[0]['password'];
+			verification.verifylogin(password, inputPassword).then((res) => {
+				resolve(res);
+			});
+		});
+	});
+	
+}
+
+const updatePassword = exports.updatePassword = () => {
+	updateWindow();
+}
+
+const updateWindow = () => {
+	let updWin = new BrowserWindow({
+			webPreferences : {
+				nodeIntegration : true,
+				contextIsolation : false,
+				enableRemoteModule :true,
+				devTools: false
+			},
+			resizable:true,
+			parent:newWindow,
+			width: 300,
+			height: 200,
+			modal: true,
+			show: false,
+			alwaysOnTop:true, 
+	});
+	updWin.loadFile('./app/update.html');
+	updWin.setMenu(null);
+	updWin.once('ready-to-show', () => {
+		updWin.show();
+	});
+	require("@electron/remote/main").enable(updWin.webContents);
+}
+
+const relaunch = exports.relaunch = () => {
+	closeWindow(newWindow);
 }
