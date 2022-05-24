@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<title>Change Password</title>
+</head>
+<body>
+	<form id="form">
+		<div>
+			<input type="password" id = "old-password" placeholder="Old Password" minlength="5" pattern="[0-9]*" maxlength="5" name="old-password" inputmode="numeric" required />
+			<input type="password" id = "password" minlength="5" placeholder="Set 5 digit Password" pattern="[0-9]*" maxlength="5" name="password" inputmode="numeric" required />
+			<input type="password" id="password-verify" minlength="5" placeholder="re-enter password" pattern="[0-9]*" maxlength="5" name="password-verify" inputmode="numeric" required />
+		</div>
+		<button class="update" id="update-password">Update</button>
+		<button id="close-btn">close</button>
+	</form>
+</body>
+<script type="text/javascript">
+	require('./update')
+</script>
+</html>
