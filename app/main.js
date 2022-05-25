@@ -1,16 +1,17 @@
 const {app, BrowserWindow, Menu, Tray} =require('electron');
-const {menubar} = require('menubar');
 const applicationMenu = require('./application-menu');
 const path = require('path');
 require('@electron/remote/main').initialize();
-var sanitizer = require('sanitize')();
 const AppDAO = require('./dao');
 const vault = require('./vault');
 const verify = require('./verifyPassword')
 let vaultDB;
 let db = null;
 let newWindow, logWin, regWin, defaultmenus = null;
-db = new AppDAO('./vault.sqlite3');
+let dbpath = `vault.sqlite3`.replace('app.asar', '');
+const imgPath = app.isPackaged ? path.join(process.resourcesPath, "img") : "img";
+console.log(dbpath)
+db = new AppDAO(dbpath);
 vaultDB = new vault(db)
 let verification = new verify();
 const bcrypt = require('bcrypt');
@@ -46,12 +47,15 @@ const gotTheLock = app.requestSingleInstanceLock();
 if(!gotTheLock) app.quit();
 
 app.on('ready', () => {
-	tray = new Tray(path.join('img/locker.png'));
+	
+	tray = new Tray(path.join(imgPath,'locker.png'));
+	console.log('onready');
 	updateMenu();
 	tray.setToolTip('Password Vault');
 })
 
 const openUp = () => {
+	console.log('openup');
 	vaultDB.checkRegistered().then((row) => {
 		if (row.length <= 0 ){
 			registerWindow();
@@ -76,9 +80,9 @@ const loginWindow = () => {
 			alwaysOnTop:true,
 			width: 300,
 			height: 200,
-			icon:'img/locker.png',
+			icon:path.join(imgPath,'locker.png'),
 		});
-		logWin.loadFile('app/login.html');
+		logWin.loadFile(path.join(__dirname, 'login.html'));
 		logWin.setMenu(null);
 		logWin.once('ready-to-show', () => {
 			logWin.show();
@@ -104,9 +108,9 @@ const registerWindow = exports.registerWindow = () => {
 			alwaysOnTop:true,
 			width: 300,
 			height: 200,
-			icon:'img/locker.png',
+			icon:path.join(imgPath,'locker.png'),
 		});
-		regWin.loadFile('app/register.html');
+		regWin.loadFile(path.join(__dirname, 'register.html'));
 		regWin.setMenu(null);
 		regWin.once('ready-to-show', () => {
 			regWin.show();
@@ -129,11 +133,11 @@ const mainWindow = () => {
 			resizable:false,
 			titleBarStyle: 'hidden',
 	  		titleBarOverlay: true,
-	  		icon:'img/locker.png',
+	  		icon:path.join(imgPath,'locker.png'),
 		});
 
 		newWindow.setBackgroundColor('#212121')
-		newWindow.loadFile('app/index.html');
+		newWindow.loadFile(path.join(__dirname, 'index.html'));
 		newWindow.setMenu(applicationMenu);
 		newWindow.once('ready-to-show', () => {
 		 	newWindow.show();
@@ -169,9 +173,9 @@ const addCredentialsBox = exports.addCredentialsBox = (targetWindow, values = nu
 			modal: true,
 			show: false,
 			alwaysOnTop:true, 
-			icon:'img/locker.png',
+			icon:path.join(imgPath,'locker.png'),
 	});
-	child.loadFile('./app/addcred.html');
+	child.loadFile(path.join(__dirname, 'addcred.html'));
 	child.setMenu(null);
 	child.once('ready-to-show', () => {
 		if(values != null){
@@ -194,10 +198,6 @@ const addCredentials = exports.addCredentials = (id = 0,namee, username, passwor
 		vaultDB.create(namee, username, password);
 	}
 	
-};
-
-const sanitizeString = exports.sanitizeString = (input) => {
-	return sanitizer.value(input, 'String');
 };
 
 const getAllData = exports.getAllData = () => {
@@ -266,7 +266,7 @@ const updateWindow = () => {
 			show: false,
 			alwaysOnTop:true, 
 	});
-	updWin.loadFile('./app/update.html');
+	updWin.loadFile(path.join(__dirname, 'update.html'));
 	updWin.setMenu(null);
 	updWin.once('ready-to-show', () => {
 		updWin.show();
