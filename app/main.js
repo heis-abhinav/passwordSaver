@@ -10,7 +10,6 @@ let db = null;
 let newWindow, logWin, regWin, defaultmenus = null;
 let dbpath = `vault.sqlite3`.replace('app.asar', '');
 const imgPath = app.isPackaged ? path.join(process.resourcesPath, "img") : "img";
-console.log(dbpath)
 db = new AppDAO(dbpath);
 vaultDB = new vault(db)
 let verification = new verify();
@@ -47,15 +46,13 @@ const gotTheLock = app.requestSingleInstanceLock();
 if(!gotTheLock) app.quit();
 
 app.on('ready', () => {
-	
+
 	tray = new Tray(path.join(imgPath,'locker.png'));
-	console.log('onready');
 	updateMenu();
 	tray.setToolTip('Password Vault');
 })
 
 const openUp = () => {
-	console.log('openup');
 	vaultDB.checkRegistered().then((row) => {
 		if (row.length <= 0 ){
 			registerWindow();
@@ -107,7 +104,7 @@ const registerWindow = exports.registerWindow = () => {
 			show: false,
 			alwaysOnTop:true,
 			width: 300,
-			height: 200,
+			height: 300,
 			icon:path.join(imgPath,'locker.png'),
 		});
 		regWin.loadFile(path.join(__dirname, 'register.html'));
@@ -131,8 +128,6 @@ const mainWindow = () => {
 				devTools: false,
 			},
 			resizable:false,
-			titleBarStyle: 'hidden',
-	  		titleBarOverlay: true,
 	  		icon:path.join(imgPath,'locker.png'),
 		});
 
@@ -166,13 +161,13 @@ const addCredentialsBox = exports.addCredentialsBox = (targetWindow, values = nu
 				enableRemoteModule :true,
 				devTools: false
 			},
-			resizable:true,
+			resizable:false,
 			parent:targetWindow,
 			width: 300,
-			height: 200,
+			height: 300,
 			modal: true,
 			show: false,
-			alwaysOnTop:true, 
+			alwaysOnTop:true,
 			icon:path.join(imgPath,'locker.png'),
 	});
 	child.loadFile(path.join(__dirname, 'addcred.html'));
@@ -193,18 +188,18 @@ const addCredentials = exports.addCredentials = (id = 0,namee, username, passwor
 		vaultDB.update(id, namee, username, password).then((res) => {
 			closeWindow(targetWindow);
 		})
-		
+
 	}else{
 		vaultDB.create(namee, username, password);
 	}
-	
+
 };
 
 const getAllData = exports.getAllData = () => {
 	vaultDB.getAll().then((rows) => {
-		newWindow.webContents.send('password-list', rows);	
+		newWindow.webContents.send('password-list', rows);
 	});
-	
+
 };
 
 const convertDecToOct = exports.convertDecToOct = (num) => num.toString(16);
@@ -243,7 +238,7 @@ const verPassword = exports.verPassword = (inputPassword)  => {
 			});
 		});
 	});
-	
+
 }
 
 const updatePassword = exports.updatePassword = () => {
@@ -258,13 +253,13 @@ const updateWindow = () => {
 				enableRemoteModule :true,
 				devTools: false
 			},
-			resizable:true,
+			resizable:false,
 			parent:newWindow,
 			width: 300,
-			height: 200,
+			height: 300,
 			modal: true,
 			show: false,
-			alwaysOnTop:true, 
+			alwaysOnTop:true,
 	});
 	updWin.loadFile(path.join(__dirname, 'update.html'));
 	updWin.setMenu(null);

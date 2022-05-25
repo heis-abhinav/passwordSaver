@@ -11,7 +11,7 @@ loginButton.addEventListener('click', (event) => {
 	mainProcess.verifyLogin(password.value, currentWindow);
 });
 
-ipcRenderer.on('wrong-password',(e) =>  alert('wrong password'))
+ipcRenderer.on('wrong-password',(e) =>  {password.value =''; password.focus();})
 
 forgetButton.addEventListener('click', (event) => {
 	prompt({
