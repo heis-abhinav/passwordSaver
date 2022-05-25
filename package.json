@@ -2,9 +2,11 @@
   "name": "passwordsaver",
   "version": "1.0.0",
   "description": "A password storage desktop app to store passwords which resides in tray",
-  "main": "./app/main.js",
+  "main": "app/main.js",
   "scripts": {
     "start": "electron .",
+    "app:dir": "electron-builder --dir",
+    "app:dist": "electron-builder",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -13,19 +15,45 @@
   },
   "author": "Abhinav Sharma",
   "license": "ISC",
+  "email": "abhinavkumr77@gmail.com",
   "bugs": {
-    "url": "https://github.com/heis-abhinav/passwordSaver/issues"
+    "url": "https://github.com/heis-abhinav/passwordSaver/issues",
+    "email": "abhinavkumr77@gmail.com"
   },
   "homepage": "https://github.com/heis-abhinav/passwordSaver#readme",
   "dependencies": {
     "@electron/remote": "^2.0.8",
     "bcrypt": "^5.0.1",
     "bluebird": "^3.7.2",
-    "electron": "^18.2.3",
+    
     "electron-prompt": "^1.7.0",
     "sqlite3": "^5.0.8"
   },
   "devDependencies": {
-    "menubar": "^9.2.0"
+    "electron": "^18.2.3",
+    "electron-builder": "^23.0.3"
+  },
+   "build": {
+    "appId": "1.0.0",
+    "productName" : "Password Vault",
+    "copyright": "Copyright © 2022 ${author}",
+    "linux": {
+      "category": "Personal App",
+      "target": "deb",
+      "icon": "img/locker.png",
+      "maintainer": "abhinav",
+      "asarUnpack": [
+        "vault.sqlite3"
+      ]
+
+    },
+    "win": {
+      "target": "msi",
+      "icon": "img/locker.png"
+    },
+    "extraResources": [
+    "./img/**",
+    "./vault.sqlite3"
+  ]
   }
 }
