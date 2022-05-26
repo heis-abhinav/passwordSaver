@@ -35,6 +35,7 @@ body{
 
 .password-table {
   width: 100%;
+  table-layout:fixed;
 }
 
 .password-list {
@@ -42,6 +43,10 @@ body{
   margin-top: 5px;
   padding: 0 10px;
   padding-bottom: 10px;
+}
+
+td{
+  word-wrap:break-word;
 }
 
 .password-headers {
